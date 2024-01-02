@@ -192,10 +192,6 @@ list_of_selected_locations_delhi = [
     "Location_Vasant Kunj",
     "Location_other",
 ]
-print(len(locations_list_bangalore))
-print(len(list_of_selected_locations_bangalore))
-print(len(locations_list_delhi))
-print(len(list_of_selected_locations_delhi))
 
 locations_list_kolkata = [
     "other",
@@ -267,8 +263,6 @@ list_of_selected_locations_kolkata = [
     "Location_Uttarpara Kotrung",
     "Location_other",
 ]
-print(len(locations_list_kolkata))
-print(len(list_of_selected_locations_kolkata))
 
 
 list_of_selected_locations_mumbai = [
