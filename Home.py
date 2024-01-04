@@ -5,11 +5,11 @@ import os
 
 # check if all files present in the compressed folder else download them
 
-if not os.path.exists("compressed/bangalore_house_price_model.pkl.pbz2"):
-    with st.spinner("Downloading files from Google Drive Folder"):
-        download_files()
-else:
-    pass
+# if not os.path.exists("compressed/bangalore_house_price_model.pkl.pbz2"):
+#     with st.spinner("Downloading files from Google Drive Folder"):
+#         download_files()
+# else:
+#     pass
 
 # @st.cache_resource
 # def get_model(name):

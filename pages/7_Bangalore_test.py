@@ -1,27 +1,28 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from helper import list_of_selected_locations_hyderabad, locations_list_hyderabad
+from helper import list_of_selected_locations_bangalore, locations_list_bangalore
 from decomp import get_files
 import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
+import xgboost, lightgbm, catboost
 
 st.set_page_config(layout="wide")
 
 
 @st.cache_resource
 def load_pred():
-    model = get_files("Hyderabad")
+    model = get_files("Bangalore")
     return model
 
 
 load_clf = load_pred()
-st.title("Hyderabad House Price Prediction")
+st.title("Bangalore House Price Prediction")
 
 st.markdown(
     """
-This app predicts the **Hyderabad House Price**!
+This app predicts the **Bangalore House Price**!
 """
 )
 st.sidebar.header("User Input Features")
@@ -37,7 +38,7 @@ def user_input_features():
 
     location = st.sidebar.selectbox(
         "Location",
-        locations_list_hyderabad,
+        locations_list_bangalore,
         index=0,
     )
     Area = st.sidebar.slider("Area", 100, 10000, 1000)
@@ -64,7 +65,7 @@ def user_input_features():
     selected_location = "Location_" + location
     # features[selected_location] = 1
 
-    for i in list_of_selected_locations_hyderabad:
+    for i in list_of_selected_locations_bangalore:
         if i == selected_location:
             features[i] = 1
         else:
@@ -94,25 +95,28 @@ user_input = {
 }
 
 # Apply model to make predictions
-prediction = load_clf.predict(df)
-prediction2 = load_clf.predict(df)
-prediction3 = load_clf.predict(df)
-prediction4 = load_clf.predict(df)
-prediction5 = load_clf.predict(df)
+# print("_-----------------------------------------")
+# print(load_clf[3])
+prediction_rf = load_clf[0].predict(df)
+prediction_lgbm = load_clf[1].predict(df)
+prediction_xgb = load_clf[2].predict(df)
+prediction_cat = load_clf[3].predict(df)
+prediction_lr = load_clf[4].predict(df)
 # ["Linear Regression", "Random Forest (Best)", "XGBoost", "LGBM", "CatBoost"],
 #
+
 if model == "Linear Regression":
-    curr = prediction[0]
+    curr = prediction_lr[0]
 elif model == "Random Forest (Best)":
-    curr = prediction2[0]
+    curr = prediction_rf[0]
 elif model == "XGBoost":
-    curr = prediction3[0]
+    curr = prediction_xgb[0]
 elif model == "LGBM":
-    curr = prediction4[0]
+    curr = prediction_lgbm[0]
 elif model == "CatBoost":
-    curr = prediction5[0]
+    curr = prediction_cat[0]
 else:
-    curr = prediction[0]
+    curr = prediction_rf[0]
 
 with col1:
     st.table(
@@ -127,53 +131,41 @@ with col1:
 
     <h1> ₹ {:.2f} Lakhs </h1>
     """.format(
-            prediction[0] / 100000
+            curr / 100000
         ),
         unsafe_allow_html=True,
     )
-   
-    meme_flag = False
 
+    meme_flag = False
 
     if st.checkbox("Show me the meme"):
         meme_flag = True
     if meme_flag:
-
-
-
         st.header("Meme Review")
         if curr <= 5000000:
             st.image("pages/img/1.png", width=350)
         elif 5000000 < curr <= 10000000:
-            st.image("pages/img/2.jpg",width=350)
-        elif 10000000 < curr <= 15000000:   
-            st.image("pages/img/3.png",width=350)
+            st.image("pages/img/2.jpg", width=350)
+        elif 10000000 < curr <= 15000000:
+            st.image("pages/img/3.png", width=350)
         else:
-            st.image("pages/img/4.png",width=350)
+            st.image("pages/img/4.png", width=350)
 
+stats = pd.read_csv("pages/files/test_time_accuracy_Bangalore.csv")
+
+# create dictionary for model performance
+model_performance = {
+    "Linear Regression": prediction_lr[0],
+    "Random Forest": prediction_rf[0],
+    "XGBoost": prediction_xgb[0],
+    "LGBM": prediction_lgbm[0],
+    "CatBoost": prediction_cat[0],
+}
 with col2:
-    st.line_chart(
-        {
-            "Linear Regression": prediction[0],
-            "Random Forest": prediction2[0],
-            "XGBoost": prediction3[0],
-            "LGBM": prediction4[0],
-            "CatBoost": prediction5[0],
-        },
-        height=350,
-    )
+    st.line_chart(model_performance,height=350, color="#803EF5")
 
     st.subheader("Test time accuracy for 5 different models")
-    st.line_chart(
-        {
-            "Linear Regression": 0.75,
-            "Random Forest": 0.85,
-            "XGBoost": 0.88,
-            "LGBM": 0.89,
-            "CatBoost": 0.90,
-        },
-        height=350,
-    )
+    st.line_chart(stats, height=350, x="Model", y="Accuracy", color="#803EF5")
 
 
 # col1.subheader("Prediction")

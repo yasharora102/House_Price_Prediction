@@ -24,10 +24,27 @@ def download_files():
 def get_files(file):
 
     if file == "Bangalore":
-        bangalore_house_price_model = decompress_pickle(
-            "compressed/bangalore_house_price_model.pkl.pbz2"
+        bangalore_house_price_model_rf = decompress_pickle(
+            "compressed/bangalore/bangalore_house_price_model-rf.pkl.pbz2"
         )
-        return bangalore_house_price_model
+
+        bangalore_house_price_model_lgbm = decompress_pickle(
+            "compressed/bangalore/bangalore_house_price_model_lgbm_model.pkl.pbz2"
+        )
+
+        bangalore_house_price_model_xgb = decompress_pickle(
+            "compressed/bangalore/bangalore_house_price_model_xgb_model.pkl.pbz2"
+        )
+
+        bangalore_house_price_model_cat = decompress_pickle(
+            "compressed/bangalore/bangalore_house_price_model_catboost_model.pkl.pbz2"
+        )
+
+        bangalore_house_price_model_lr = decompress_pickle( 
+            "compressed/bangalore/bangalore_house_price_model_lr.pkl.pbz2"
+        )
+        return bangalore_house_price_model_rf, bangalore_house_price_model_lgbm, bangalore_house_price_model_xgb, bangalore_house_price_model_cat, bangalore_house_price_model_lr
+    
     elif file == "Hyderabad":
         hyderabad_house_price_model = decompress_pickle(
             "compressed/hyderabad_house_price_model.pkl.pbz2"
