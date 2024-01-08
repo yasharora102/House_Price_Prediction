@@ -3,15 +3,25 @@ import pandas as pd
 import numpy as np
 import pickle
 import warnings
+from streamlit_extras.app_logo import add_logo
 
 warnings.filterwarnings("ignore")
 from decomp import decompress_pickle
 import os
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    layout="wide",
+    page_title="House Price Prediction",
+    page_icon="🏠",
+    initial_sidebar_state="expanded",
+)
 
 model_dir = "models"
+add_logo(
+    "icons8-house-96.png",
+    height=70,
+)
 
 
 @st.cache_resource
@@ -45,6 +55,7 @@ def load_models():
         X,
         Data,
     )
+
 
 (
     rf_regressor,
