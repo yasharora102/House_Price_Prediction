@@ -5,7 +5,7 @@ import pickle
 import warnings
 
 warnings.filterwarnings("ignore")
-from decomp import get_files
+from decomp import decompress_pickle
 import os
 
 
@@ -46,7 +46,6 @@ def load_models():
         Data,
     )
 
-
 (
     rf_regressor,
     lr_regressor,
@@ -59,6 +58,7 @@ def load_models():
 ) = load_models()
 
 
+# adsiuiausduyhgadhsujigvhj
 def model_prediction(city, area, sqft, bhk, park, ac, wifi, lift, security):
     city_index = np.where(X.columns == city)[0][0]
     area_index = np.where(X.columns == area)[0][0]

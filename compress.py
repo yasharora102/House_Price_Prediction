@@ -24,10 +24,20 @@ def compress_pickle(file_list):
         compressed_pickle.close()
         print(f"{file} Compressed")
 
+def compress_pickle_joblib(file_list):
+    print("Compressing Files")
+    print(file_list)
+    for file in file_list:
+        data = joblib.load(open(file, "rb"))
+        compressed_pickle = bz2.BZ2File(file + ".pbz2", "wb")
+        joblib.dump(data, compressed_pickle)
+        compressed_pickle.close()
+        print(f"{file} Compressed")
 
+        
 def main():
     # get files
-    folder_name = "training"
+    folder_name = "models"
     files = fetch_files(folder_name)
     # compress files
     compress_pickle(files)
