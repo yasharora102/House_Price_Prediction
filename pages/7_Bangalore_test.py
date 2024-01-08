@@ -1,12 +1,15 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from helper import list_of_selected_locations_bangalore, locations_list_bangalore
+from helper import list_of_selected_locations_bangalore, locations_list_bangalore, get_stats, get_scaler
 from decomp import get_files
 import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
 import xgboost, lightgbm, catboost
+from sklearn.preprocessing import StandardScaler
+
+# scaler = StandardScaler()
 
 st.set_page_config(layout="wide")
 
@@ -48,7 +51,7 @@ def user_input_features():
     Childrensplayarea = st.sidebar.slider("Children'splayarea", 0, 1, 1)
     LiftAvailable = st.sidebar.slider("LiftAvailable", 0, 1, 1)
     Wardrobe = st.sidebar.slider("Wardrobe", 0, 1, 1)
-    Price_per_sqft = st.sidebar.slider("Price_per_sqft", 100, 10000, 1000)
+    # Price_per_sqft = bangalore_dataset['Price']*100000/bangalore_dataset['Area']
     data = {
         "Area": Area,
         "No. of Bedrooms": No_of_Bedrooms,
@@ -57,7 +60,7 @@ def user_input_features():
         "Children'splayarea": Childrensplayarea,
         "LiftAvailable": LiftAvailable,
         "Wardrobe": Wardrobe,
-        "Price_per_sqft": Price_per_sqft,
+
     }
 
     features = pd.DataFrame(data, index=[0])
@@ -81,7 +84,6 @@ col1, col2 = st.columns(2, gap="small")
 col1.header("User Input parameters")
 col2.header("Model Performance")
 
-
 user_input = {
     "Area": df["Area"].values[0],
     "No. of Bedrooms": df["No. of Bedrooms"].values[0],
@@ -90,20 +92,53 @@ user_input = {
     "Children'splayarea": df["Children'splayarea"].values[0],
     "LiftAvailable": df["LiftAvailable"].values[0],
     "Wardrobe": df["Wardrobe"].values[0],
-    "Price_per_sqft": df["Price_per_sqft"].values[0],
+    # "Price_per_sqft": df["Price_per_sqft"].values[0],
     "Location": location,
 }
 
-# Apply model to make predictions
-# print("_-----------------------------------------")
-# print(load_clf[3])
+
+mean , std = get_stats("bangalore")
+
+scaler = get_scaler("bangalore")
+# print("Mean",mean)
+# print("std",std)
+
+# print Total NaN values
+# print(df.isnull().sum().sum())
+# df = df.to_numpy()
+# df = scaler.fit_transform(df.to_numpy().reshape(1, -1))
+# print(df)
+
+
+# df = (df - mean) 
+# print("MEAN SHAPE")
+# print(mean.shape)
+
+# print("DF SHAPE")
+
+# print(df.shape)
+# print(df)
+# # print(df)
+
+print(df.to_numpy().tolist())   
+# df = scaler.transform(df)
+# print(df.tolist())
+
 prediction_rf = load_clf[0].predict(df)
 prediction_lgbm = load_clf[1].predict(df)
 prediction_xgb = load_clf[2].predict(df)
 prediction_cat = load_clf[3].predict(df)
 prediction_lr = load_clf[4].predict(df)
-# ["Linear Regression", "Random Forest (Best)", "XGBoost", "LGBM", "CatBoost"],
-#
+
+
+# prediction_rf = load_clf[0].predict(scaler.fit_transform(df))
+# prediction_lgbm = load_clf[1].predict(scaler.fit_transform(df))
+# prediction_xgb = load_clf[2].predict(scaler.fit_transform(df))
+# prediction_cat = load_clf[3].predict(scaler.fit_transform(df))
+# prediction_lr = load_clf[4].predict(scaler.fit_transform(df))
+
+print(prediction_rf)
+
 
 if model == "Linear Regression":
     curr = prediction_lr[0]
@@ -117,6 +152,9 @@ elif model == "CatBoost":
     curr = prediction_cat[0]
 else:
     curr = prediction_rf[0]
+
+print(curr)
+
 
 with col1:
     st.table(
@@ -167,15 +205,3 @@ with col2:
     st.subheader("Test time accuracy for 5 different models")
     st.line_chart(stats, height=350, x="Model", y="Accuracy", color="#803EF5")
 
-
-# col1.subheader("Prediction")
-# col1.write(
-#     """
-#     **₹ {:.2f} Lakhs**.
-#     """.format(
-#         prediction[0] / 100000
-#     )
-# )
-
-
-# col2.image("https://media.giphy.com/media/3o7aDcz6Y0fzWYvU5G/giphy.gif")

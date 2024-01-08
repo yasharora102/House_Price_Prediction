@@ -3,6 +3,7 @@ import pickle
 import bz2file as bz2
 import gdown
 import os
+import joblib
 
 drive_folder_link = "https://drive.google.com/drive/folders/15Ie_N9AwON_ArFGymBqbUdB64YipGmQL?usp=sharing"
 
@@ -13,6 +14,11 @@ def decompress_pickle(file):
     print(f"{file} Decompressed")
     return data
 
+def decompress_pickle_joblib(file):
+    data = bz2.BZ2File(file, "rb")
+    data = joblib.load(data)
+    print(f"{file} Decompressed")
+    return data
 
 def download_files():
     # Downloading files from Google Drive Folder
@@ -24,23 +30,26 @@ def download_files():
 def get_files(file):
 
     if file == "Bangalore":
-        bangalore_house_price_model_rf = decompress_pickle(
-            "compressed/bangalore/bangalore_house_price_model-rf.pkl.pbz2"
+        bangalore_house_price_model_rf = decompress_pickle_joblib(
+            "compressed/bangalore/bangalore_house_price_model_random_forest_model.pkl.pbz2"
         )
 
-        bangalore_house_price_model_lgbm = decompress_pickle(
+        bangalore_house_price_model_lgbm = decompress_pickle_joblib(
             "compressed/bangalore/bangalore_house_price_model_lgbm_model.pkl.pbz2"
         )
 
-        bangalore_house_price_model_xgb = decompress_pickle(
+        # bangalore_house_price_model_xgb = decompress_pickle(
+        #     "compressed/bangalore/bangalore_house_price_model_xgb_model.pkl.pbz2"
+        # )
+        bangalore_house_price_model_xgb = decompress_pickle_joblib(
             "compressed/bangalore/bangalore_house_price_model_xgb_model.pkl.pbz2"
         )
 
-        bangalore_house_price_model_cat = decompress_pickle(
+        bangalore_house_price_model_cat = decompress_pickle_joblib(
             "compressed/bangalore/bangalore_house_price_model_catboost_model.pkl.pbz2"
         )
 
-        bangalore_house_price_model_lr = decompress_pickle( 
+        bangalore_house_price_model_lr = decompress_pickle_joblib( 
             "compressed/bangalore/bangalore_house_price_model_lr.pkl.pbz2"
         )
         return bangalore_house_price_model_rf, bangalore_house_price_model_lgbm, bangalore_house_price_model_xgb, bangalore_house_price_model_cat, bangalore_house_price_model_lr

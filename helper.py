@@ -1,3 +1,8 @@
+import os
+import numpy as np
+import pickle
+# import sklearn
+
 locations_list_bangalore = [
     "JP Nagar Phase 1",
     "other",
@@ -395,3 +400,56 @@ locations_list_hyderabad = [
     "Gajularamaram",
     "Nallagandla Gachibowli",
 ]
+
+
+def get_stats(name):
+    dir_ = f"training/stats"
+    mean = f"mean_{name}.npy"
+    std = f"std_{name}.npy"
+    mean = np.load(os.path.join(dir_, mean))
+    std = np.load(os.path.join(dir_, std))
+
+    return mean, std
+
+
+def get_scaler(name):
+    dir_ = f"training/stats"
+    scaler = f"{name}_house_price_scaler.pkl"
+    # scaler = pickle.load(os.path.join(dir_, scaler))
+    with open(os.path.join(dir_, scaler), "rb") as f:
+        scaler = pickle.load(f)
+        return scaler
+
+
+
+import pickle
+import pandas as pd
+model_dir = "models"
+
+rf_regressor = pickle.load(open(os.path.join(model_dir,"RandomForestRegressor.pkl"),"rb"))
+lr_regressor = pickle.load(open(os.path.join(model_dir,"LinearRegression.pkl"),"rb"))
+dt_regressor = pickle.load(open(os.path.join(model_dir,"DecisionTreeRegressor.pkl"),"rb"))
+xgb_regressor = pickle.load(open(os.path.join(model_dir,"XGBRegressor.pkl"),"rb"))
+lgb_regressor = pickle.load(open(os.path.join(model_dir,"LGBMRegressor.pkl"),"rb"))
+cb_regressor = pickle.load(open(os.path.join(model_dir,"CatBoostRegressor.pkl"),"rb"))
+
+X = pd.read_csv("pages/files/X.csv")
+
+def model_prediction(city,area,sqft,bhk,park,ac,wifi,lift,security):
+    city_index = np.where(X.columns==city)[0][0]
+    area_index = np.where(X.columns==area)[0][0]
+    x = np.zeros(len(X.columns))
+    x[0] = sqft
+    x[1] = bhk
+    x[2] = park
+    x[3] = ac
+    x[4] = wifi
+    x[5] = lift
+    x[6] = security
+    if city_index >=0:
+        x[city_index] = 1
+    if area_index >=0:
+        x[area_index] = 1
+    return rf_regressor.predict([x])[0] , lr_regressor.predict([x])[0] , dt_regressor.predict([x])[0] , xgb_regressor.predict([x])[0] , lgb_regressor.predict([x])[0] , cb_regressor.predict([x])[0]
+
+# print(model_prediction('Banglore', 'Uttarahalli', 834, 3,1,0,0,1,1))
