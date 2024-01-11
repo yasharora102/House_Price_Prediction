@@ -2,12 +2,7 @@ __pycache__
 training/combined.ipynb
 bangalore_house_price_model.txt
 df.txt
-compressed/bangalore_house_price_model.pkl.pbz2
-compressed/delhi_house_price_model.pkl.pbz2
-compressed/hyderabad_house_price_model.pkl.pbz2
-compressed/kolkata_house_price_model.pkl.pbz2
-compressed/mumbai_house_price_model.pkl.pbz2
-compresssed
+compressed
 models/compress.py
 models/hyderabad_house_price_model.pkl
 models/compressed/bangalore_house_price_model.pkl.pbz2
@@ -16,3 +11,5 @@ models/compressed/hyderabad_house_price_model.pkl.pbz2
 models/compressed/kolkata_house_price_model.pkl.pbz2
 models/compressed/mumbai_house_price_model.pkl.pbz2
 models/Archive.zip
+catboost_info
+.vscode
