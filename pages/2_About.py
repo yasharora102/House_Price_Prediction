@@ -44,7 +44,7 @@ def about_page():
         - LightGBM
         - CatBoost
         
-        **Research Paper**: You can find the research paper related to this project [here](https://drive.google.com/file/d/1erSeT8rseePqqyXmOC0EhtBZt39SJgmH/view?usp=sharing).
+        **Research Paper**: You can find the research paper related to this project [here](https://drive.google.com/file/d/1rqTmEHY-lUONui3ib8FfUnlKHu_11R42/view?usp=sharing).
         
         Made with ❤️ by:
         - [Yash Arora](https://yasharora102.github.io)
